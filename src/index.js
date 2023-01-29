@@ -1,5 +1,6 @@
 import express from "express";
 import { randomUUID } from "node:crypto";
+import { getBalance } from "./utils/get-balance.js";
 
 const app = express();
 
@@ -18,14 +19,6 @@ function verifyIfAccountExists(request, response, next) {
   request.customer = customer;
 
   return next();
-}
-
-function getBalance(statement) {
-  return statement.reduce((acc, operation) => {
-    return operation.type === "credit"
-      ? acc + operation.amount
-      : acc - operation.amount;
-  }, []);
 }
 
 // Criação de conta
@@ -143,8 +136,6 @@ app.get("/balance", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
 
   const balance = getBalance(customer.statement);
-
-  if (Array.isArray(balance)) return response.json({ balance: 0 });
 
   return response.json({ balance });
 });
