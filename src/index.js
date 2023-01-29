@@ -138,4 +138,15 @@ app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
   return response.status(204).send();
 });
 
+// Obter o Saldo
+app.get("/balance", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+
+  const balance = getBalance(customer.statement);
+
+  if (Array.isArray(balance)) return response.json({ balance: 0 });
+
+  return response.json({ balance });
+});
+
 app.listen(3333);
