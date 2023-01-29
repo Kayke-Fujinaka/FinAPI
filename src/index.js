@@ -21,13 +21,11 @@ function verifyIfExistsAccountCPF(request, response, next) {
 }
 
 function getBalance(statement) {
-  const balance = statement.reduce((acc, operation) => {
+  return statement.reduce((acc, operation) => {
     return operation.type === "credit"
       ? acc + operation.amount
       : acc - operation.amount;
   }, []);
-
-  return balance;
 }
 
 // Criação de conta
@@ -96,6 +94,21 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
   customer.statement.push(statementOperation);
 
   return response.status(201).send();
+});
+
+// Buscar extrato do cliente por data
+app.get("/statementByDate", verifyIfExistsAccountCPF, (req, res) => {
+  const { customer } = req;
+  const { date } = req.query;
+
+  const dateFormat = new Date(date + " 00:00");
+
+  const statement = customer.statement.filter(
+    (statement) =>
+      statement.created_at.toDateString() ===
+      new Date(dateFormat).toDateString()
+  );
+  return res.json(statement);
 });
 
 app.listen(3333);
