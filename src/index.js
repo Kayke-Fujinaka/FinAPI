@@ -28,4 +28,13 @@ app.post("/account", (request, response) => {
   return response.status(201).send();
 });
 
+// Buscar o extrato bancário do cliente
+app.get("/statement/:CPF", (request, response) => {
+  const { CPF } = request.params;
+
+  const customer = customers.find((customer) => customer.CPF === CPF);
+
+  return response.json(customer.statement);
+});
+
 app.listen(3333);
