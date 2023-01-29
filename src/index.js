@@ -7,7 +7,7 @@ app.use(express.json());
 
 const customers = [];
 
-function verifyIfExistsAccountCPF(request, response, next) {
+function verifyIfAccountExists(request, response, next) {
   const { cpf } = request.headers;
 
   const customer = customers.find((customer) => customer.cpf === cpf);
@@ -50,13 +50,13 @@ app.post("/account", (request, response) => {
 });
 
 // Buscar o extrato bancário do cliente
-app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
+app.get("/statement", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
   return response.json(customer.statement);
 });
 
 // Realizar um depósito
-app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
+app.post("/deposit", verifyIfAccountExists, (request, response) => {
   const { description, amount } = request.body;
 
   const { customer } = request;
@@ -74,7 +74,7 @@ app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Realizar um saque
-app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
+app.post("/withdraw", verifyIfAccountExists, (request, response) => {
   const { amount } = request.body;
 
   const { customer } = request;
@@ -97,7 +97,7 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Buscar extrato do cliente por data
-app.get("/statementByDate", verifyIfExistsAccountCPF, (request, response) => {
+app.get("/statementByDate", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
   const { date } = request.query;
 
@@ -112,7 +112,7 @@ app.get("/statementByDate", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Atualizar dados do cliente
-app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
+app.put("/account", verifyIfAccountExists, (request, response) => {
   const { name } = request.body;
 
   const { customer } = request;
@@ -123,14 +123,14 @@ app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Obter Informações do Cliente
-app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
+app.get("/account", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
 
   return response.json(customer);
 });
 
 // Deletar Cliente
-app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+app.delete("/account", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
 
   customers.splice(customer, 1);
@@ -139,7 +139,7 @@ app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Obter o Saldo
-app.get("/balance", verifyIfExistsAccountCPF, (request, response) => {
+app.get("/balance", verifyIfAccountExists, (request, response) => {
   const { customer } = request;
 
   const balance = getBalance(customer.statement);
