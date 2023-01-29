@@ -97,9 +97,9 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Buscar extrato do cliente por data
-app.get("/statementByDate", verifyIfExistsAccountCPF, (req, res) => {
-  const { customer } = req;
-  const { date } = req.query;
+app.get("/statementByDate", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+  const { date } = request.query;
 
   const dateFormat = new Date(date + " 00:00");
 
@@ -108,7 +108,10 @@ app.get("/statementByDate", verifyIfExistsAccountCPF, (req, res) => {
       statement.created_at.toDateString() ===
       new Date(dateFormat).toDateString()
   );
-  return res.json(statement);
+  return response.json(statement);
 });
+
+// Atualizar dados do cliente
+app.put("/account", verifyIfExistsAccountCPF, (request, response));
 
 app.listen(3333);
