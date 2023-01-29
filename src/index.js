@@ -9,10 +9,10 @@ const customers = [];
 
 // Criação de conta
 app.post("/account", (request, response) => {
-  const { name, CPF } = request.body;
+  const { name, cpf } = request.body;
 
   const customerAlreadyExists = customers.some(
-    (customer) => customer.CPF === CPF
+    (customer) => customer.cpf === cpf
   );
 
   if (customerAlreadyExists)
@@ -21,7 +21,7 @@ app.post("/account", (request, response) => {
   customers.push({
     id: randomUUID(),
     name,
-    CPF,
+    cpf,
     statement: [],
   });
 
@@ -29,10 +29,10 @@ app.post("/account", (request, response) => {
 });
 
 // Buscar o extrato bancário do cliente
-app.get("/statement/:CPF", (request, response) => {
-  const { CPF } = request.params;
+app.get("/statement", (request, response) => {
+  const { cpf } = request.headers;
 
-  const customer = customers.find((customer) => customer.CPF === CPF);
+  const customer = customers.find((customer) => customer.cpf === cpf);
 
   if (!customer)
     return response.status(404).json({ error: "Customer not found!" });
