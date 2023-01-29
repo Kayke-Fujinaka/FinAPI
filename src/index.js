@@ -122,4 +122,11 @@ app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
   return response.status(204).send();
 });
 
+// Obter Informações do Cliente
+app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+
+  return response.json(customer);
+});
+
 app.listen(3333);
