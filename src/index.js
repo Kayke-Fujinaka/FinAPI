@@ -112,6 +112,14 @@ app.get("/statementByDate", verifyIfExistsAccountCPF, (request, response) => {
 });
 
 // Atualizar dados do cliente
-app.put("/account", verifyIfExistsAccountCPF, (request, response));
+app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
+  const { name } = request.body;
+
+  const { customer } = request;
+
+  customer.name = name;
+
+  return response.status(204).send();
+});
 
 app.listen(3333);
